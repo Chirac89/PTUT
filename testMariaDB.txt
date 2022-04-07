@@ -1,0 +1,1 @@
+CREATE TABLE `p2111053`.`client` ( `id` VARCHAR NOT NULL , `nom` VARCHAR NOT NULL , `prenom` VARCHAR NOT NULL ) ENGINE = InnoDB;
