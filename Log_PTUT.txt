@@ -1,1 +1,7 @@
-07/04/2022 - Anthony : Création du log du projet tutoré ;
+23/03/2022 - Anthony : Création du kanban sur Trello pour l'organisation du projet, découpage des taches selon les livreables ;
+25/03/2022 - Alex & Anthony : 	Création du diagramme de cas d'utilisation de l'interface web (sur ?nom logiciel?) & Modélisation de la base de donnée (sur ?nom logiciel?)
+				(BDD permettant de clarifier quelles fonctionnalitées seront implémentées)
+30/03/2022 - Alex & Anthony : 	Complétion du diagramme de cas d'utilisation de l'interface web
+01/04/2022 - Alex & Anthony : 	Symphony
+
+
