@@ -1,7 +1,24 @@
-23/03/2022 - Anthony : Création du kanban sur Trello pour l'organisation du projet, découpage des taches selon les livreables ;
-25/03/2022 - Alex & Anthony : 	Création du diagramme de cas d'utilisation de l'interface web (sur ?nom logiciel?) & Modélisation de la base de donnée (sur ?nom logiciel?)
-				(BDD permettant de clarifier quelles fonctionnalitées seront implémentées)
-30/03/2022 - Alex & Anthony : 	Complétion du diagramme de cas d'utilisation de l'interface web
-01/04/2022 - Alex & Anthony : 	Symphony
+23/03/2022 - Anthony : 		Création du kanban sur Trello pour l'organisation du projet
+				Création et complétion du Gantt sur GanttProject
+				Découpage des taches selon les livreables
+
+25/03/2022 - Alex & Anthony : 	Création du diagramme de cas d'utilisation (DCU) web & Modélisation de la base de donnée (BDD) sur StarUML
+				(BDD permettant de clarifier quelles fonctionnalitées essentielles mais non préçisées sur le sujet seront implémentées)
+
+30/03/2022 - Alex & Anthony : 	Complétion du diagramme de cas d'utilisation de l'interface web et rectification de la BDD (préçision des fonctionnalitées)
+
+
+-------------------- AVRIL --------------------
+
+01/04/2022 - Alex & Anthony : 	Suivi d'un cours PHP (car module PHP en retard)
+
+04/04/2022 - Alex & Anthony :  	Réalisation du DCU Desktop
+
+05/04/2022 - Alex & Anthnoy : 	Création du diagramme de classe de l'Appli Desktop sur StarUM
+				Rectification du DCU Desktop
+
+06/04/2022 - Alex & Anthony :	Apprentissage des fondements du MCV (Model View Controler)
+
+
 
 
