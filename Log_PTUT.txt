@@ -19,6 +19,8 @@
 
 06/04/2022 - Alex & Anthony :	Apprentissage des fondements du MCV (Model View Controler)
 
+26/04/2002 - Alex & Anthony : Complétion du DC de l'appli Desktop	
+
 
 
 
