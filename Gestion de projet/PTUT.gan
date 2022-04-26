@@ -7,7 +7,7 @@
         <field id="tpd4" name="Date de début" width="65" order="1"/>
         <field id="tpd5" name="Date de fin" width="64" order="2"/>
         <option id="color.recent">
-            <![CDATA[#999999 #ffcc00 #ff6666 #66ccff #cc99ff #cc66ff]]>
+            <![CDATA[#ffcc33 #999999 #ffcc00 #ff6666 #66ccff #cc99ff #cc66ff]]>
         </option>
     </view>
     <view id="resource-table">
@@ -46,6 +46,7 @@
         <task id="15" name="IMH Java" color="#66ccff" meeting="false" start="2022-03-31" duration="3" complete="0" thirdDate="2022-03-28" thirdDate-constraint="0" expand="true">
             <depend id="25" type="2" difference="0" hardness="Strong"/>
         </task>
+        <task id="34" name="Apprentissage PHP" color="#ffcc33" meeting="false" start="2022-03-28" duration="10" complete="0" thirdDate="2022-03-28" thirdDate-constraint="0" expand="true"/>
         <task id="25" name="Prototype Java" color="#66ccff" meeting="false" start="2022-04-05" duration="20" complete="0" thirdDate="2022-03-28" thirdDate-constraint="0" expand="true"/>
         <task id="9" name="DCU Web" color="#cc99ff" meeting="false" start="2022-03-28" duration="3" complete="0" thirdDate="2022-03-28" thirdDate-constraint="0" expand="true">
             <depend id="11" type="2" difference="0" hardness="Strong"/>
