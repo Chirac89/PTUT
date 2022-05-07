@@ -1,0 +1,124 @@
+SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS `Produit`;
+DROP TABLE IF EXISTS `Photo`;
+DROP TABLE IF EXISTS `Catégorie`;
+DROP TABLE IF EXISTS `Sous-catégorie`;
+DROP TABLE IF EXISTS `Avis`;
+DROP TABLE IF EXISTS `Log`;
+DROP TABLE IF EXISTS `Compte client`;
+DROP TABLE IF EXISTS `Panier`;
+DROP TABLE IF EXISTS `Transaction`;
+DROP TABLE IF EXISTS `Adresse`;
+DROP TABLE IF EXISTS `Whislist`;
+SET FOREIGN_KEY_CHECKS = 1;
+
+CREATE TABLE `Produit` (
+    `id_produit` VARCHAR NOT NULL,
+    `categorie` VARCHAR NOT NULL,
+    `sous-catégorie` VARCHAR NOT NULL,
+    `nom` VARCHAR NOT NULL,
+    `prix` FLOAT NOT NULL,
+    `Description` TEXT NOT NULL,
+    `taux_remise` INTEGER(3) NOT NULL,
+    `Seuil_alerte` INTEGER NOT NULL,
+    `Stock` INTEGER NOT NULL,
+    PRIMARY KEY (`id_produit`)
+);
+
+CREATE TABLE `Photo` (
+    `id_photo` VARCHAR NOT NULL,
+    `id_produit` VARCHAR NOT NULL,
+    `chemin` VARCHAR NOT NULL,
+    PRIMARY KEY (`id_photo`)
+);
+
+CREATE TABLE `Catégorie` (
+    `id_cat` VARCHAR NOT NULL,
+    `libellé` VARCHAR NOT NULL,
+    PRIMARY KEY (`id_cat`)
+);
+
+CREATE TABLE `Sous-catégorie` (
+    `id_sous-cat` VARCHAR NOT NULL,
+    `id_cat` VARCHAR NOT NULL,
+    `libellé` VARCHAR NOT NULL,
+    PRIMARY KEY (`id_sous-cat`)
+);
+
+CREATE TABLE `Avis` (
+    `id_avis` VARCHAR NOT NULL,
+    `id_produit` VARCHAR NOT NULL,
+    `id_client` VARCHAR NOT NULL,
+    `contenu` TEXT NOT NULL,
+    `date` DATE NOT NULL,
+    `note` FLOAT NOT NULL,
+    PRIMARY KEY (`id_avis`, `id_produit`, `id_client`, `date`)
+);
+
+CREATE TABLE `Log` (
+    `date_debut` DATETIME NOT NULL,
+    `heure` INTEGER NOT NULL,
+    `IP address` VARCHAR NOT NULL,
+    `id_client` VARCHAR NOT NULL,
+    `date_fin` DATETIME NOT NULL,
+    PRIMARY KEY (`date_debut`, `IP address`)
+);
+
+CREATE TABLE `Compte client` (
+    `id_client` VARCHAR NOT NULL,
+    `nom` VARCHAR NOT NULL,
+    `prenom` VARCHAR NOT NULL,
+    `email` VARCHAR NOT NULL,
+    `mot_de_passe` VARCHAR NOT NULL,
+    `date_creation` DATETIME NOT NULL,
+    `date_anniversaire` VARCHAR NOT NULL,
+    PRIMARY KEY (`id_client`)
+);
+
+CREATE TABLE `Panier` (
+    `id_client` VARCHAR NOT NULL,
+    `id_produit` VARCHAR NOT NULL,
+    `quantité` INTEGER NOT NULL,
+    `date_ajout_produit` DATETIME NOT NULL,
+    PRIMARY KEY (`id_client`, `id_produit`, `date_ajout_produit`)
+);
+
+CREATE TABLE `Transaction` (
+    `id_client` VARCHAR NOT NULL,
+    `id_produit` VARCHAR NOT NULL,
+    `prix` FLOAT NOT NULL,
+    `quantité` INTEGER NOT NULL,
+    `date` DATETIME NOT NULL,
+    `id_adresse` INTEGER NOT NULL,
+    PRIMARY KEY (`id_client`, `id_produit`, `date`)
+);
+
+CREATE TABLE `Adresse` (
+    `id_adresse` INTEGER NOT NULL,
+    `id_client` VARCHAR NOT NULL,
+    `libelle` VARCHAR NOT NULL,
+    `rue` VARCHAR NOT NULL,
+    `compl_rue` VARCHAR,
+    `code_postal` VARCHAR NOT NULL,
+    `ville` VARCHAR NOT NULL,
+    `pays` VARCHAR NOT NULL,
+    PRIMARY KEY (`id_adresse`, `id_client`)
+);
+
+CREATE TABLE `Whislist` (
+    `id_client` VARCHAR NOT NULL,
+    `id_produit` VARCHAR NOT NULL,
+    `quantité` INTEGER NOT NULL,
+    `date_ajout_produit` INTEGER NOT NULL,
+    PRIMARY KEY (`id_client`, `id_produit`, `date_ajout_produit`)
+);
+
+ALTER TABLE `Produit` ADD FOREIGN KEY (`categorie`) REFERENCES `Catégorie`(`id_cat`);
+ALTER TABLE `Produit` ADD FOREIGN KEY (`sous-catégorie`) REFERENCES `Sous-catégorie`(`id_sous-cat`);
+ALTER TABLE `Photo` ADD FOREIGN KEY (`id_produit`) REFERENCES `Produit`(`id_produit`);
+ALTER TABLE `Sous-catégorie` ADD FOREIGN KEY (`id_cat`) REFERENCES `Catégorie`(`id_cat`);
+ALTER TABLE `Avis` ADD FOREIGN KEY (`id_produit`) REFERENCES `Produit`(`id_produit`);
+ALTER TABLE `Panier` ADD FOREIGN KEY (`id_produit`) REFERENCES `Produit`(`id_produit`);
+ALTER TABLE `Panier` ADD FOREIGN KEY (`id_client`) REFERENCES `Compte client`(`id_client`);
+ALTER TABLE `Whislist` ADD FOREIGN KEY (`id_produit`) REFERENCES `Produit`(`id_produit`);
+ALTER TABLE `Whislist` ADD FOREIGN KEY (`id_client`) REFERENCES `Compte client`(`id_client`);
