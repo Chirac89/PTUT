@@ -8,7 +8,7 @@ CREATE TABLE customers (
     birthday DATE NOT NULL,
     
     CONSTRAINT PK_customer PRIMARY KEY (PK_customer_ID),
-    CONSTRAINT CHK_email CHECK (email='$_@_$')
+    CONSTRAINT CHK_email CHECK (email='$_@_$'),
     CONSTRAINT UNIQUE_email UNIQUE
 );
 

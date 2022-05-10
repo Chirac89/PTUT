@@ -1,50 +1,24 @@
-CREATE TABLE customers (
-    PK_customer_ID VARCHAR,
-    last_name VARCHAR NOT NULL,
-    first_name VARCHAR NOT NULL,
-    email VARCHAR NOT NULL,
-    customer_password VARCHAR NOT NULL,
-    creation_date DATE NOT NULL,
-    birthday DATE NOT NULL,
-    
-    CONSTRAINT PK_customer PRIMARY KEY (PK_customer_ID),
-    CONSTRAINT CHK_email CHECK (email='$_@_$')
-    CONSTRAINT UNIQUE_email UNIQUE
-);
 
-CREATE TABLE categories (
-    PK_cat_ID VARCHAR,
-    cat_wording VARCHAR NOT NULL,
-    
-    CONSTRAINT PK_category PRIMARY KEY (PK_cat_ID)
-);
 
-CREATE TABLE subcategories (
-    PK_subcat_ID VARCHAR,
-    FK_cat_ID VARCHAR,
-    subcat_wording VARCHAR NOT NULL,
-    
-    CONSTRAINT PK_subcategory PRIMARY KEY (PK_subcat_ID),
-    CONSTRAINT FK_subcategory_cat_ID FOREIGN KEY (FK_cat_ID) REFERENCES categories(PK_cat_ID)
-);
+
+
+
 
 CREATE TABLE products (
-    PK_product_ID VARCHAR,
-    FK_cat_ID VARCHAR NOT NULL,
-    FK_subcat_ID VARCHAR,
-    product_wording VARCHAR NOT NULL,
+    PK_product_ID CHAR(15),
+    FK_product_cat_ID CHAR(15) NOT NULL,
+    FK_product_subcat_ID CHAR(15),
+    
+    product_wording VARCHAR(255) NOT NULL,
     product_price FLOAT NOT NULL,
     product_description TEXT,
-    product_discount_rate INT NOT NULL,
-    product_alert_threshold INT NOT NULL,
+    product_discountRate INT NOT NULL,
+    product_alertThreshold INT NOT NULL,
     product_stock INT NOT NULL,
     
-    CONSTRAINT PK_product PRIMARY KEY (PK_product_ID),
-    CONSTRAINT FK_product_cat_ID FOREIGN KEY (FK_cat_ID) REFERENCES categories(PK_cat_ID),
-    CONSTRAINT FK_product_subcat_ID FOREIGN KEY (FK_subcat_ID) REFERENCES subcategories(PK_subcat_ID),
-    
-    CONSTRAINT CHK_product_subcat_ID CHECK (FK_subcat_ID IS NULL OR (SELECT FK_cat_ID FROM subcategories WHERE PK_subcat_ID = FK_subcat_ID) = FK_cat_ID),
-    CONSTRAINT CHK_product_price CHECK (product_price >= 0)
+    CONSTRAINT C_PK_product PRIMARY KEY (PK_product_ID),
+    CONSTRAINT C_FK_product_cat_ID FOREIGN KEY (FK_product_cat_ID) REFERENCES categories(PK_cat_ID),
+    CONSTRAINT C_FK_product_subcat_ID FOREIGN KEY (FK_product_subcat_ID) REFERENCES subcategories(PK_subcat_ID)
 );
 
 
@@ -118,19 +92,30 @@ CREATE TABLE wishlist_elements (
     CONSTRAINT CHK_wishlist_element_quantity CHECK (wishlist_element_quantity > 0)
 );
 
+CREATE TABLE transactions (
+    PK_transation_ID VARCHAR,
+    FK_customer_ID VARCHAR NOT NULL,
+    FK_delivery_adress VARCHAR NOT NULL,
+    
+    transaction_datetime DATE NOT NULL,
+    
+    CONSTRAINT PK_transaction PRIMARY KEY (PK_transaction_ID),
+    CONSTRAINT FK_transaction_customer_ID FOREIGN KEY (FK_customer_ID) REFERENCES customers(PK_customer_ID),
+    CONSTRAINT FK_transaction_delivery_adress FOREIGN KEY (FK_delivery_adress) REFERENCES adresses(PK_adress_ID),
+    
+    CONSTRAINT UNIQUE_transaction_date_customer UNIQUE (FK_customer_ID, transaction_datetime)
+);
+
 CREATE TABLE transaction_elements (
-    PK_FK_customer_ID VARCHAR,
+    PK_FK_transaction_ID VARCHAR,
     PK_FK_product_ID VARCHAR,
-    PK_transaction_date DATE,
-    FK_adress_ID INT NOT NULL,
     
     transaction_element_price FLOAT NOT NULL,
     transaction_element_quantity INT NOT NULL,
     
-    CONSTRAINT PK_transaction PRIMARY KEY (PK_FK_customer_ID, PK_FK_product_ID, PK_transaction_date),
-    CONSTRAINT FK_transaction_element_customer_ID FOREIGN KEY (PK_FK_customer_ID) REFERENCES customers(PK_customer_ID),
+    CONSTRAINT PK_transaction_element PRIMARY KEY (PK_FK_transaction_ID, PK_FK_product_ID),
+    CONSTRAINT FK_transaction_element_transaction_ID FOREIGN KEY (PK_FK_transaction_ID) REFERENCES transactions(PK_transaction_ID),
     CONSTRAINT FK_transaction__element_product_ID FOREIGN KEY (PK_FK_product_ID) REFERENCES products(PK_product_ID),
-    CONSTRAINT FK_transaction__element_adress_ID FOREIGN KEY (PK_FK_adress_ID) REFERENCES adresses(PK_adress_ID),
     
     CONSTRAINT CHK_transaction_element_quantity CHECK (transaction_element_quantity > 0),
     CONSTRAINT CHK_transaction_element_price CHECK (transaction_element_price >= 0)
@@ -149,17 +134,36 @@ CREATE TABLE logs (
     CONSTRAINT CHK_log_session CHECK (log_session_starting < log_session_ending)
 );
 
+/*===============================================================================================================*/
 
+CREATE TABLE customers (
+    PK_customer_ID CHAR(15),
+    
+    customer_lastName VARCHAR(255) NOT NULL,
+    customer_firstName VARCHAR(255) NOT NULL,
+    customer_email VARCHAR(255) NOT NULL,
+    customer_passwordHash VARCHAR(255) NOT NULL,
+    customer_accountCreationDate DATE NOT NULL,
+    customer_birthday DATE NOT NULL,
+    
+    CONSTRAINT C_PK_customer PRIMARY KEY (PK_customer_ID),
+    CONSTRAINT C_UC_customer_email UNIQUE (customer_email)
+);
 
+CREATE TABLE categories (
+    PK_cat_ID CHAR(15),
+    
+    cat_wording VARCHAR(255) NOT NULL,
+    
+    CONSTRAINT C_PK_category PRIMARY KEY (PK_cat_ID)
+);
 
-
-
-
-
-
-
-
-
-
-
-
+CREATE TABLE subcategories (
+    PK_subcat_ID CHAR(15),
+    FK_subcat_cat_ID CHAR(15),
+    
+    subcat_wording VARCHAR(255) NOT NULL,
+    
+    CONSTRAINT C_PK_subcategory PRIMARY KEY (PK_subcat_ID),
+    CONSTRAINT C_FK_subcategory_cat_ID FOREIGN KEY (FK_subcat_cat_ID) REFERENCES categories(PK_cat_ID)
+);
