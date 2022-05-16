@@ -12,30 +12,35 @@ CREATE TABLE customers (
     CONSTRAINT C_UC_customer_email UNIQUE (customer_email)
 );
 
+
 CREATE TABLE categories (
     PK_cat_ID CHAR(15),
     
-    cat_wording VARCHAR(255) NOT NULL,
+    cat_name VARCHAR(255) NOT NULL,
     
-    CONSTRAINT C_PK_category PRIMARY KEY (PK_cat_ID)
+    CONSTRAINT C_PK_category PRIMARY KEY (PK_cat_ID),
+    CONSTRAINT C_UC_cat_name UNIQUE (cat_name)
 );
+
 
 CREATE TABLE subcategories (
     PK_subcat_ID CHAR(15),
     FK_subcat_cat_ID CHAR(15),
     
-    subcat_wording VARCHAR(255) NOT NULL,
+    subcat_name VARCHAR(255) NOT NULL,
     
     CONSTRAINT C_PK_subcategory PRIMARY KEY (PK_subcat_ID),
-    CONSTRAINT C_FK_subcategory_cat_ID FOREIGN KEY (FK_subcat_cat_ID) REFERENCES categories(PK_cat_ID)
+    CONSTRAINT C_FK_subcategory_cat_ID FOREIGN KEY (FK_subcat_cat_ID) REFERENCES categories(PK_cat_ID),
+    CONSTRAINT C_UC_subcat_name UNIQUE (subcat_name)
 );
+
 
 CREATE TABLE products (
     PK_product_ID CHAR(15),
     FK_product_cat_ID CHAR(15) NOT NULL,
     FK_product_subcat_ID CHAR(15),
     
-    product_wording VARCHAR(255) NOT NULL,
+    product_name VARCHAR(255) NOT NULL,
     product_price FLOAT NOT NULL,
     product_description TEXT,
     product_discountRate INT NOT NULL,
@@ -46,6 +51,20 @@ CREATE TABLE products (
     CONSTRAINT C_FK_product_cat_ID FOREIGN KEY (FK_product_cat_ID) REFERENCES categories(PK_cat_ID),
     CONSTRAINT C_FK_product_subcat_ID FOREIGN KEY (FK_product_subcat_ID) REFERENCES subcategories(PK_subcat_ID)
 );
+
+
+CREATE TABLE promotionalOperations (
+    PK_promoOperation_ID CHAR(15),
+    FK_promoOperation_product_ID CHAR(15) NOT NULL,
+    
+    promoOperation_name VARCHAR(255),
+    promoOperation_start DATETIME NOT NULL,
+    promoOperation_end DATETIME NOT NULL,
+    
+    CONSTRAINT C_PK_promotionalOperation PRIMARY KEY (PK_promoOperation_ID),
+    CONSTRAINT C_FK_promoOperation_product_ID FOREIGN KEY (FK_promoOperation_product_ID) REFERENCES products(PK_product_ID)
+);
+
 
 CREATE TABLE pictures (
     PK_picture_ID CHAR(10),
