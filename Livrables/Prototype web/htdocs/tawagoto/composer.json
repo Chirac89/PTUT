@@ -1,0 +1,17 @@
+{
+    "name": "antho/tawagoto",
+    "autoload": {
+        "psr-4": {
+            "Antho\\Tawagoto\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Chirac89",
+            "email": "77213896+Chirac89@users.noreply.github.com"
+        }
+    ],
+    "require": {
+        "twig/twig": "^3.3"
+    }
+}
