@@ -1,0 +1,17 @@
+--Insertion catégories
+
+INSERT INTO `categories`(`cat_name`) VALUES ('cat1');
+INSERT INTO `categories`(`cat_name`) VALUES ('cat2');
+INSERT INTO `categories`(`cat_name`) VALUES ('cat3');
+INSERT INTO `categories`(`cat_name`) VALUES ('cat4');
+INSERT INTO `categories`(`cat_name`) VALUES ('cat5');
+INSERT INTO `categories`(`cat_name`) VALUES ('cat6');
+
+--Insertion produits
+
+INSERT INTO `products`(`FK_product_cat_ID`, `FK_product_subcat_ID`, `product_name`, `product_price`, `product_description`, `product_alertThreshold`, `product_stock`) 
+	VALUES ('1001',NULL,'pdt1','100','produit standard n°1','50','51');
+
+--Insertion images
+
+INSERT INTO `pictures`(`FK_picture_product_ID`, `picture_path`) VALUES (100001,'./assets/images/Licorne.jpg');
