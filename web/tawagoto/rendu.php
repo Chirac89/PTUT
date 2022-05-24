@@ -47,10 +47,24 @@
 
 <?php 
 
+    include 'Connexion.php';
+    require 'Product.php';
+    require 'Database.php';
+    
+    global $db;
+    
+    $table = "";
+    
+    $database = new Database($db);
+    
+    $product = $database->getOneByID(100031, $table);
+    
     require('./vues/v_header.php'); //ou include si le processus ne doit s'arrêter
     require './vues/v_list_product.php';
     //require('./vues/v_middle.php');
     require('./vues/v_footer.php');
+    
+
 
 ?>
 
