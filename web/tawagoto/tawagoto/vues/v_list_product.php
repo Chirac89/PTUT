@@ -1,12 +1,18 @@
 <?php 
 if(isset($_GET['cat'])){
-    $arrayProducts = $database->getFilteredObjects("products", $_GET['cat']);
-    //$arrayCategories = $database->getFilteredObjects("subcategories", $_GET['cat']);
-    $cat = $database->getOneByID($_GET['cat'], "categories");
+    $arrayProducts = $database->FilterByCat("products", $_GET['cat']);
+    $arrayCategories = $database->FilterByCat("subcategories", $_GET['cat']);
+    $cat = $database->getOneByID("categories", $_GET['cat']);
 }else{
+    if(isset($_GET['subcat'])){
+        $subcat = $database->getOneByID("subcategories", $_GET['subcat']);
+        $arrayCategories = $database->FilterByCat("subcategories", $subcat->cat);
+        $arrayProducts = $database->FilterBySubCat("products", $_GET['subcat']);
+        $cat = $database->getOneByID("categories", $subcat->cat);
+    }else{
     $arrayProducts = $database->getAllWithLimit("products", 15, 0);
     $arrayCategories = $database->getAll("categories");
-}?>
+    }}?>
 
 <!-- Breadcrumbs -->
 <div class="breadcrumbs">
@@ -15,16 +21,19 @@ if(isset($_GET['cat'])){
 			<div class="col-12">
 				<div class="bread-inner">
 					<ul class="bread-list">
-						<li><a href="index1.html">Home<i class="ti-arrow-right"></i></a></li>
+						<li><a href="rendu.php">Home<i class="ti-arrow-right"></i></a></li>
 						<?php if(isset($_GET['cat'])){
 						    echo "<li class=\"active\">";
 						
 							echo "<a href=\"blog-single.html\">".$cat->getName()."</a>";
 						    echo "</li>";
 						}
-						else{
+						else{if (isset($_GET['subcat'])) {
+						    echo "<li><a href=\"blog-single.html\">".$cat->getName()."<i class=\"ti-arrow-right\"></i></a></li>";
+						    echo "<li class=\"active\"><a href=\"blog-single.html\"><b>".$subcat->getName()."</b></a></li>";
+						}else{
 						    echo "<li class=\"active\"><a href=\"blog-single.html\">Produits</a></li>";
-						}?>
+						}}?>
 					</ul>
 				</div>
 			</div>
@@ -41,12 +50,16 @@ if(isset($_GET['cat'])){
 				<div class="shop-sidebar">
 						<!-- Single Widget -->
 						<div class="single-widget category">
-							<h3 class="title">Categories</h3>
-							<ul class="categor-list">
-							<?php 
-							foreach ($arrayCategories as $categorie){
-							    echo "<li><a href=\"rendu.php?cat=".$categorie->getId()."\">".$categorie->getName()."</a></li>";
-							};
+						<?php if(isset($_GET['cat'])|| isset($_GET['subcat'])){
+						    echo "<h3 class=\"title\">Subcategories</h3><ul class=\"categor-list\">";
+							foreach($arrayCategories as $categorie){
+							    echo "<li><a href=\"rendu.php?subcat=".$categorie->getId()."\">".$categorie->getName()."</a></li>";}
+							}else{
+							    echo "<h3 class=\"title\">Categories</h3><ul class=\"categor-list\">";
+							    foreach ($arrayCategories as $categorie){
+							        echo "<li><a href=\"rendu.php?cat=".$categorie->getId()."\">".$categorie->getName()."</a></li>";
+							}
+							}
 							?>
 							</ul>
 						</div>

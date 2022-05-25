@@ -55,17 +55,19 @@ class Database {
         return $arrayResponse;
     }
     
-    function FilterByCat($table, $filter) {
+    function FilterByCat($table, $filter, $page) {
         $arrayResponse = array();
         switch ($table){
             case "products":
                 $field = "FK_product_cat_ID";
+                $limit = "LIMIT 9 OFFSET ".($page-1)*9;
                 break;
             case "subcategories":
                 $field = "FK_subcat_cat_ID";
+                $limit ="";
                 break;
         }
-        $q = $this->database->prepare("SELECT * from ".$table." WHERE ".$field." = ".$filter);
+        $q = $this->database->prepare("SELECT * from ".$table." WHERE ".$field." = ".$filter." ".$limit);
         $q->execute();
         
         $res = $q->fetchAll(PDO::FETCH_NUM);
@@ -76,11 +78,12 @@ class Database {
         return $arrayResponse;
     }
     
-    function FilterBySubCat($table, $filter) {
+    function FilterBySubCat($table, $filter, $page) {
         $arrayResponse = array();
         $field = "FK_product_subcat_ID";
+        $limit = "LIMIT 9 OFFSET ".($page-1)*9;
 
-        $q = $this->database->prepare("SELECT * from ".$table." WHERE ".$field." = ".$filter);
+        $q = $this->database->prepare("SELECT * from ".$table." WHERE ".$field." = ".$filter." ".$limit);
         $q->execute();
         
         $res = $q->fetchAll(PDO::FETCH_NUM);
@@ -89,6 +92,34 @@ class Database {
         }
         
         return $arrayResponse;
+    }
+    
+    function CountAllProducts(){
+        $q = $this->database->prepare("SELECT COUNT(PK_product_ID) from products");
+        $q->execute();
+        $res = $q->fetchColumn();
+        return $res;
+    }
+    
+    function CountProductsByCat($cat){
+        $q = $this->database->prepare("SELECT COUNT(PK_product_ID) from products WHERE FK_product_cat_ID =".$cat);
+        $q->execute();
+        $res = $q->fetchColumn();
+        return $res;
+    }
+    
+    function CountProductsBySubCat($subcat){
+        $q = $this->database->prepare("SELECT COUNT(PK_product_ID) from products WHERE FK_product_subcat_ID =".$subcat);
+        $q->execute();
+        $res = $q->fetchColumn();
+        return $res;
+    }
+    
+    function GetPicture($productID){
+        $q = $this->database->prepare("SELECT picture_path from pictures WHERE FK_picture_product_ID =".$productID);
+        $q->execute();
+        $res = $q->fetchColumn();
+        return $res;
     }
             
 }
@@ -105,4 +136,6 @@ class Database {
                 $res = new SubCategory($row[0], $row[1], $row[2]);
                 return $res;
         }
-}
+        
+    
+    }

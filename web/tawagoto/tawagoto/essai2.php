@@ -5,6 +5,7 @@ include 'Connexion.php';
 require 'Product.php';
 require 'Category.php';
 require 'Database.php';
+require 'SubCategory.php';
 
 global $db;
 
@@ -12,16 +13,18 @@ $table = "";
 
 $database = new Database($db);
 
-//$res = $database->getOneByID(100031, $table);
-//echo $res;
+$res = $database->getOneByID("subcategories", 1001);
+echo $res;
 
 //$arrayProducts = $database->getAllWithLimit("products", 15, 0);
 
-$arrayCategories = $database->getAll("categories");
+$subcat = $database->getOneByID("categories", 1001);
 
-foreach ($arrayCategories as $resOne){
-    echo $resOne;
-}
+echo $subcat->name;
+
+//foreach ($arrayCategories as $resOne){
+ //   echo $resOne;
+//}
 
 
 

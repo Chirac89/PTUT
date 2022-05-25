@@ -51,6 +51,7 @@
     require 'Product.php';
     require 'Database.php';
     require 'Category.php';
+    require 'SubCategory.php';
     
     global $db;
     
