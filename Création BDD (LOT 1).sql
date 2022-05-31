@@ -60,16 +60,19 @@ CREATE TABLE products (
 ALTER TABLE products AUTO_INCREMENT=100001;
 
 CREATE TABLE promotions (
-    PK_FK_promotion_product_ID INT NOT NULL,
-    PK_promotion_start DATETIME NOT NULL,
-    PK_promotion_end DATETIME NOT NULL,
-    
+    PK_promotion_ID INT NOT NULL AUTO_INCREMENT,
+    FK_promotion_product_ID INT NOT NULL,
+
+    promotion_start DATETIME NOT NULL,
+    promotion_end DATETIME NOT NULL,
     promotion_name VARCHAR(255),
     promotion_discountRate INT NOT NULL,
     
-    PRIMARY KEY (PK_FK_promotion_product_ID, PK_promotion_start, PK_promotion_end),
-    CONSTRAINT C_FK_promotion_product_ID FOREIGN KEY (PK_FK_promotion_product_ID) REFERENCES products(PK_product_ID)
+    PRIMARY KEY (PK_promotion_ID),
+    CONSTRAINT C_FK_promotion_product_ID FOREIGN KEY (FK_promotion_product_ID) REFERENCES products(PK_product_ID)
 );
+
+ALTER TABLE pictures AUTO_INCREMENT = 11;
 
 
 CREATE TABLE pictures (
