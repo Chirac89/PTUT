@@ -59,20 +59,30 @@ CREATE TABLE products (
 
 ALTER TABLE products AUTO_INCREMENT=100001;
 
+
 CREATE TABLE promotions (
     PK_promotion_ID INT NOT NULL AUTO_INCREMENT,
-    FK_promotion_product_ID INT NOT NULL,
 
-    promotion_start DATETIME NOT NULL,
-    promotion_end DATETIME NOT NULL,
+    promotion_start TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    promotion_end TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     promotion_name VARCHAR(255),
     promotion_discountRate INT NOT NULL,
     
     PRIMARY KEY (PK_promotion_ID),
-    CONSTRAINT C_FK_promotion_product_ID FOREIGN KEY (FK_promotion_product_ID) REFERENCES products(PK_product_ID)
+    CONSTRAINT C_UC_promotion_nameDate UNIQUE (promotion_start, promotion_end, promotion_name)
 );
 
 ALTER TABLE pictures AUTO_INCREMENT = 11;
+
+
+CREATE TABLE promoted_products (
+	PK_FK_promotion_ID INT NOT NULL,
+	PK_FK_promotion_product_ID INT NOT NULL,
+	
+	PRIMARY KEY (PK_FK_promotion_ID, PK_FK_promotion_product_ID),
+	CONSTRAINT C_FK_promotion_ID FOREIGN KEY (PK_FK_promotion_ID) REFERENCES promotions(PK_promotion_ID),
+	CONSTRAINT C_FK_promotion_product_ID FOREIGN KEY (PK_FK_promotion_product_ID) REFERENCES products(PK_product_ID)
+);
 
 
 CREATE TABLE pictures (
