@@ -65,7 +65,7 @@ CREATE TABLE promotions (
 
     promotion_start TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     promotion_end TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    promotion_name VARCHAR(255),
+    promotion_name VARCHAR(255) NOT NULL,
     promotion_discountRate INT NOT NULL,
     
     PRIMARY KEY (PK_promotion_ID),
