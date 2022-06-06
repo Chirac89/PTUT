@@ -97,7 +97,7 @@
 						<div class="col-lg-2 col-md-2 col-12">
 							<!-- Logo -->
 							<div class="logo">
-								<a href="index3.php"><img src="../assets/images/logo.png" alt="logo"></a>
+								<a href="index.php"><img src="../assets/images/logo.png" alt="logo"></a>
 							</div>
 							<!--/ End Logo -->
 							<!-- Search Form -->
@@ -167,10 +167,10 @@
 										<div class="navbar-collapse">	
 											<div class="nav-inner">	
 												<ul class="nav main-menu menu navbar-nav">
-													<li><a href="index3.php">Home</a>
+													<li><a href="index.php">Home</a>
 
 													</li>
-													<li><a href="rendu.php">Product</a></li>												
+													<li><a href="rendu.php">Products</a></li>												
 													<li><a href="contact.html">Contact Us</a></li>
 												</ul>
 											</div>

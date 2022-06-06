@@ -120,11 +120,11 @@ include 'v_breadcrumbs.php'
 									<!-- Single Post -->
 									<div class="single-post first">
 										<div class="image">
-											<img src="https://via.placeholder.com/75x75" alt="#">
+											<img src="../assets/images/xboxss.jpg" alt="#">
 										</div>
 										<div class="content">
-											<h5><a href="#">Girls Dress</a></h5>
-											<p class="price">$99.50</p>
+											<h5><a href="#">Xbox series S</a></h5>
+											<p class="price">500 &#8364</p>
 											<ul class="reviews">
 												<li class="yellow"><i class="ti-star"></i></li>
 												<li class="yellow"><i class="ti-star"></i></li>
@@ -138,11 +138,11 @@ include 'v_breadcrumbs.php'
 									<!-- Single Post -->
 									<div class="single-post first">
 										<div class="image">
-											<img src="https://via.placeholder.com/75x75" alt="#">
+											<img src="../assets/images/ps5.jpeg" alt="#">
 										</div>
 										<div class="content">
-											<h5><a href="#">Women Clothings</a></h5>
-											<p class="price">$99.50</p>
+											<h5><a href="#">Playstation 5</a></h5>
+											<p class="price">600 &#8364</p>
 											<ul class="reviews">
 												<li class="yellow"><i class="ti-star"></i></li>
 												<li class="yellow"><i class="ti-star"></i></li>
@@ -156,11 +156,11 @@ include 'v_breadcrumbs.php'
 									<!-- Single Post -->
 									<div class="single-post first">
 										<div class="image">
-											<img src="https://via.placeholder.com/75x75" alt="#">
+											<img src="../assets/images/steamdeck.jpg" alt="#">
 										</div>
 										<div class="content">
-											<h5><a href="#">Man Tshirt</a></h5>
-											<p class="price">$99.50</p>
+											<h5><a href="#">Steam Deck</a></h5>
+											<p class="price">790 &#8364</p>
 											<ul class="reviews">
 												<li class="yellow"><i class="ti-star"></i></li>
 												<li class="yellow"><i class="ti-star"></i></li>
@@ -174,16 +174,6 @@ include 'v_breadcrumbs.php'
 								</div>
 								<!--/ End Single Widget -->
 								<!-- Single Widget -->
-								<div class="single-widget category">
-									<h3 class="title">Manufacturers</h3>
-									<ul class="categor-list">
-										<li><a href="#">Forever</a></li>
-										<li><a href="#">giordano</a></li>
-										<li><a href="#">abercrombie</a></li>
-										<li><a href="#">ecko united</a></li>
-										<li><a href="#">zara</a></li>
-									</ul>
-								</div>
 								<!--/ End Single Widget -->
 						</div>
 					</div>
@@ -206,7 +196,6 @@ include 'v_breadcrumbs.php'
 									</div>
 									<ul class="view-mode">
 										<li class="active"><a href="shop-grid.html"><i class="fa fa-th-large"></i></a></li>
-										<li><a href="shop-list.html"><i class="fa fa-th-list"></i></a></li>
 									</ul>
 								</div>
 								<!--/ End Shop Top -->

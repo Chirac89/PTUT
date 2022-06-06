@@ -135,8 +135,8 @@ include 'v_header.php';
 										<li class="last">You Pay<span><?php echo $totalCart .  " &#8364"?></span></li>
 									</ul>
 									<div class="button5">
-										<a href="#" class="btn">Checkout</a>
-										<a href="#" class="btn">Continue shopping</a>
+										<a href="checkout.php" class="btn">Checkout</a>
+										<a href="index.php" class="btn">Continue shopping</a>
 									</div>
 								</div>
 							</div>
