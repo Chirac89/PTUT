@@ -2,7 +2,7 @@
 
 include '../model/Connexion.php';
 require '../model/Database.php';
-include 'test-login.php';
+include '../controller/c_login.php';
 require '../model/Product.php';
 require '../model/Category.php';
 require '../model/SubCategory.php';
@@ -11,12 +11,14 @@ global $db;
 
 $database = new Database($db);
 
+
+// ajouter un produit dans le panier
 if(isset($_POST['quant']) && isset($_POST['product'])){
+    //utilisateur non connecté
     if($_SESSION['id'] == "guest"){
         if(!isset($_SESSION['productlist'])){
             $_SESSION['productlist']= array();
         }
-        
         if(isset($_POST['product']) && isset($_POST['quant'])){
             $test = 0;
             for($a = 0; $a < count($_SESSION['productlist']); $a++){
@@ -38,30 +40,33 @@ if(isset($_POST['quant']) && isset($_POST['product'])){
             
         }
     }else{
+    //utilisateur connecté
     $database->addToCart($_SESSION['id'], $_POST['product'], $_POST['quant'][1]);
     unset($_POST['quant']);
     unset($_POST['product']);
     }
 }
 
+//Instanciation de l'objet "produit"
 $product = $database->getOneById("products",$_GET['product']);
 $cat = $database->getOneById("categories", $product->getCat());
 $subcat = $database->getOneById("subcategories", $product->getSubcat());
 
+
+//Comptage du nombre de produits dans le panier
+//utilisateur connecté
 if(isset($_SESSION['id']) && $_SESSION['id'] != "guest"){
-    $cartCount = $database->CountProductCart($_SESSION['id']);
+    $cartCount = $database->countProductCart($_SESSION['id']);
 }else if(!isset($_SESSION['productlist'])){
     $cartCount = 0;
 }else{
+    //utilisateur non connecté
     $cartCount = 0;
     for($a = 0; $a < count($_SESSION['productlist']); $a++){
         $cartCount = $cartCount + (int)$_SESSION['productlist'][$a][1];
-        //echo $_SESSION['productlist'][$a][1] . "</br>";
     }
 }
-//session_destroy();
-//var_dump($_POST);
-//var_dump($_SESSION);
+
 include 'v_header.php';
 ?>
 	
@@ -75,34 +80,10 @@ include 'v_header.php';
 								<?php
 							
 								echo "<li><a href=\"rendu.php\">Home<i class=\"ti-arrow-right\"></i></a></li>";
-								echo "<li class=\"active\"><a href=\"rendu.php\">Produits<i class=\"ti-arrow-right\"></i></a></li>";
+								echo "<li class=\"active\"><a href=\"rendu.php\">Products<i class=\"ti-arrow-right\"></i></a></li>";
 								echo "<li><a href=\"rendu.php?cat=".$cat->getID()."\">".$cat->getName()."<i class=\"ti-arrow-right\"></i></a></li>";
 								echo "<li class=\"active\"><a href=\"rendu.php?subcat=".$subcat->getID()."\">".$subcat->getName()."<i class=\"ti-arrow-right\"></i></a></li>";
 								echo "<li class=\"active\"><a href=\"#\"><b>".$product->getName()."</b></a></li>";								
-								/*
-								if(!isset($_GET['cat']) && !isset($_GET['subcat'])){
-								    echo "<li><a href=\"rendu.php\">Home<i class=\"ti-arrow-right\"></i></a></li>";
-								    echo "<li class=\"active\"><a href=\"rendu.php\"><b>Produits</b></a></li>";
-								}
-								if(isset($_GET['cat'])){
-								    if($_GET['cat'] == "all"){
-								        echo "TEST";
-								    }else{
-    								    echo "<li><a href=\"rendu.php\">Home<i class=\"ti-arrow-right\"></i></a></li>";
-    								    echo "<li class=\"active\"><a href=\"rendu.php\">Produits<i class=\"ti-arrow-right\"></i></a></li>";
-    						    		echo "<li class=\"active\">";
-    									echo "<a href=\"rendu.php?cat=".$cat->getID()."\"><b>".$cat->getName()."</b></a>";
-    						   			echo "</li>";
-								    }
-								}else{
-								    if (isset($_GET['subcat'])) {
-								        echo "<li><a href=\"rendu.php\">Home<i class=\"ti-arrow-right\"></i></a></li>";
-								        echo "<li class=\"active\"><a href=\"rendu.php\">Produits<i class=\"ti-arrow-right\"></i></a></li>";
-						    			echo "<li><a href=\"rendu.php?cat=".$cat->getID()."\">".$cat->getName()."<i class=\"ti-arrow-right\"></i></a></li>";
-						    			echo "<li class=\"active\"><a href=\"#\"><b>".$subcat->getName()."</b></a></li>";
-									}
-								}
-								*/
 								?>
 							</ul>
 						</div>
@@ -124,20 +105,9 @@ include 'v_header.php';
 											<!-- Images slider -->
 											<div class="flexslider-thumbnails">
 												<ul class="slides">
-													<li data-thumb="<?php echo $database->GetPicture($product->getId());?>" rel="adjustX:10, adjustY:">
-														<img src="<?php echo $database->GetPicture($product->getId());?>" alt="#">
+													<li data-thumb="<?php echo $database->getPicture($product->getId());?>" rel="adjustX:10, adjustY:">
+														<img src="<?php echo $database->getPicture($product->getId());?>" alt="#">
 													</li>
-													<!-- Images supplémentaires slider
-													<li data-thumb="https://via.placeholder.com/570x520">
-														<img src="https://via.placeholder.com/570x520" alt="#">
-													</li>
-													<li data-thumb="https://via.placeholder.com/570x520">
-														<img src="https://via.placeholder.com/570x520" alt="#">
-													</li>
-													<li data-thumb="https://via.placeholder.com/570x520">
-														<img src="https://via.placeholder.com/570x520" alt="#">
-													</li>
-													Fin images supplémentaires slider -->
 												</ul>
 											</div>
 											<!-- End Images slider -->

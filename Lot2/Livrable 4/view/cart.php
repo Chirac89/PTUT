@@ -3,36 +3,38 @@
 
 include '../model/Connexion.php';
 require '../model/Database.php';
-include 'test-login.php';
+include '../controller/c_login.php';
 require '../model/Product.php';
 require '../model/Category.php';
 require '../model/SubCategory.php';
+
+include '../controller/c_cart_count.php';
 
 global $db;
 
 $database = new Database($db);
 
 $arrayProducts = array();
-
-//var_dump($_SESSION['productlist']);
-if(isset($_SESSION['productlist'])){
-    for($a = 0; $a < count($_SESSION['productlist']); $a++){
-        $product = $database->getOneById("products",$_SESSION['productlist'][$a][0]);
-        array_push($arrayProducts, $product);
-    }
-}
-
-
+$arrayQuantities = array();
 
 if(isset($_SESSION['id']) && $_SESSION['id'] != "guest"){
-    $cartCount = $database->CountProductCart($_SESSION['id']);
-}else if(!isset($_SESSION['productlist'])){
-    $cartCount = 0;
+    $arrayCarts = $database->getCart($_SESSION['id']);
+    foreach ($arrayCarts as $pdt){
+        $product = $database->getOneById("products",$pdt[0]);
+        $productQuantity = $pdt[1];
+        array_push($arrayProducts, $product);
+        array_push($arrayQuantities, $productQuantity);
+    }
 }else{
-    $cartCount = 0;
-    for($a = 0; $a < count($_SESSION['productlist']); $a++){
-        $cartCount = $cartCount + (int)$_SESSION['productlist'][$a][1];
-        //echo $_SESSION['productlist'][$a][1] . "</br>";
+    
+    //instanciation du panier si non connecté
+    if(isset($_SESSION['productlist'])){
+        for($a = 0; $a < count($_SESSION['productlist']); $a++){
+            $product = $database->getOneById("products",$_SESSION['productlist'][$a][0]);
+            array_push($arrayProducts, $product);
+            $productQuantity = $_SESSION['productlist'][$a][1];
+            array_push($arrayQuantities, $productQuantity);
+        }
     }
 }
 
@@ -62,7 +64,7 @@ include 'v_header.php';
 							foreach ($arrayProducts as $product){ ?>
 							    
 							<tr>
-								<td class="image" data-title="No"><img style="object-fit:scale-down;"src="<?php echo $database->GetPicture($product->getId()); ?>" alt="#"></td>
+								<td class="image" data-title="No"><img style="object-fit:scale-down;"src="<?php echo $database->getPicture($product->getId()); ?>" alt="#"></td>
 								<td class="product-des" data-title="Description">
 									<p class="product-name"><a href="<?php echo "detail.php?product=".$product->getId()?>"><?php echo $product->getName()?></a></p>
 									<p class="product-des"><?php echo $database->getOneById("categories", $product->getCat())->getName()?></p>
@@ -82,7 +84,7 @@ include 'v_header.php';
 												<i class="ti-minus"></i>
 											</button>
 										</div>
-										<input type="text" name="quant[1]" class="input-number"  data-min="1" data-max="100" value="<?php echo $_SESSION['productlist'][$i][1]?>">
+										<input type="text" name="quant[1]" class="input-number"  data-min="1" data-max="100" value="<?php echo $arrayQuantities[$i]?>">
 										<div class="button plus">
 											<button type="button" class="btn btn-primary btn-number" data-type="plus" data-field="quant[1]">
 												<i class="ti-plus"></i>
@@ -94,14 +96,15 @@ include 'v_header.php';
 								<td class="total-amount" data-title="Total">
 								<span>
 									<?php
-									$totalCart = $totalCart + $prodPrice*$_SESSION['productlist'][$i][1];
-									echo $prodPrice*$_SESSION['productlist'][$i][1] .  " &#8364";
+									$totalCart = $totalCart + $prodPrice*$arrayQuantities[$i];
+									echo $prodPrice*$arrayQuantities[$i] .  " &#8364";
+									$i++;
 									?>
 								</span>
 								</td>
 								<td class="action" data-title="Remove"><a href="#"><i class="ti-trash remove-icon"></i></a></td>
 							</tr>
-							<?php $i++;} ?>
+							<?php } ?>
 						</tbody>
 					</table>
 					<!--/ End Shopping Summery -->
@@ -158,7 +161,7 @@ include 'v_header.php';
 					<div class="single-service">
 						<i class="ti-rocket"></i>
 						<h4>Free shiping</h4>
-						<p>Orders over $100</p>
+						<p>Orders over 100 &#8364</p>
 					</div>
 					<!-- End Single Service -->
 				</div>
@@ -184,7 +187,7 @@ include 'v_header.php';
 					<!-- Start Single Service -->
 					<div class="single-service">
 						<i class="ti-tag"></i>
-						<h4>Best Peice</h4>
+						<h4>Best Price</h4>
 						<p>Guaranteed price</p>
 					</div>
 					<!-- End Single Service -->
