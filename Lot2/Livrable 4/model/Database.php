@@ -8,6 +8,9 @@ class Database {
         $this->database = $db;
     }
     
+    //Génération des produits au sein des différentes pages
+    
+    //Instancier des objets et les renvoyer vers le controlleur
     function getOneByID($table, $id) {
         switch($table){
             case "categories":
@@ -55,7 +58,8 @@ class Database {
         return $arrayResponse;
     }
     
-    function FilterByCat($table, $filter, $page) {
+    //recupérer des objets selon un filtre
+    function filterByCat($table, $filter, $page) {
         $arrayResponse = array();
         switch ($table){
             case "products":
@@ -83,7 +87,7 @@ class Database {
         return $arrayResponse;
     }
     
-    function FilterBySubCat($table, $filter, $page) {
+    function filterBySubCat($table, $filter, $page) {
         $arrayResponse = array();
         $field = "FK_product_subcat_ID";
         $limit = "LIMIT 9 OFFSET ".($page-1)*9;
@@ -99,40 +103,7 @@ class Database {
         return $arrayResponse;
     }
     
-    function CountAllProducts(){
-        $q = $this->database->prepare("SELECT COUNT(PK_product_ID) from products");
-        $q->execute();
-        $res = $q->fetchColumn();
-        return $res;
-    }
-    
-    function CountProductsByCat($cat){
-        if($cat == "all"){
-            $sql = "SELECT COUNT(PK_product_ID) from products";
-        }else{
-            $sql = "SELECT COUNT(PK_product_ID) from products WHERE FK_product_cat_ID =".$cat;
-        }
-        $q = $this->database->prepare($sql);
-        $q->execute();
-        $res = $q->fetchColumn();
-        return $res;
-    }
-    
-    function CountProductsBySubCat($subcat){
-        $q = $this->database->prepare("SELECT COUNT(PK_product_ID) from products WHERE FK_product_subcat_ID =".$subcat);
-        $q->execute();
-        $res = $q->fetchColumn();
-        return $res;
-    }
-    
-    function GetPicture($productID){
-        $q = $this->database->prepare("SELECT picture_path from pictures WHERE FK_picture_product_ID =".$productID);
-        $q->execute();
-        $res = $q->fetchColumn();
-        return $res;
-    }
-    
-    function ResultSearch($cat, $filter, $page) {
+    function resultSearch($cat, $filter, $page) {
         $arrayResponse = array();
         if($cat == "all"){
             $field = "";
@@ -149,6 +120,88 @@ class Database {
         return $arrayResponse;
     }
     
+    function getPromotedProducts(){
+        $arrayResponse = array();
+        $q = $this->database->prepare("SELECT PK_product_ID, promotion_discountRate
+        FROM `promoted_products`, `promotions`, `products`
+        WHERE `PK_FK_promotion_ID`= `PK_promotion_ID`
+        AND `PK_FK_promotion_product_ID` = `PK_product_ID`
+        ORDER BY (promotion_discountRate)
+        DESC LIMIT 9;");
+        $q->execute();
+        $res = $q->fetchAll(PDO::FETCH_NUM);
+        foreach ($res as $row){
+            array_push($arrayResponse, $row);
+        }
+        return $arrayResponse;
+    }
+    
+    /***********************************************************/
+    
+    //Compter le nombre de produits de la table avec ou sans filtre
+    function countAllProducts(){
+        $q = $this->database->prepare("SELECT COUNT(PK_product_ID) from products");
+        $q->execute();
+        $res = $q->fetchColumn();
+        return $res;
+    }
+    
+    function countProductsByCat($cat){
+        if($cat == "all"){
+            $sql = "SELECT COUNT(PK_product_ID) from products";
+        }else{
+            $sql = "SELECT COUNT(PK_product_ID) from products WHERE FK_product_cat_ID =".$cat;
+        }
+        $q = $this->database->prepare($sql);
+        $q->execute();
+        $res = $q->fetchColumn();
+        return $res;
+    }
+    
+    function countProductsBySubCat($subcat){
+        $q = $this->database->prepare("SELECT COUNT(PK_product_ID) from products WHERE FK_product_subcat_ID =".$subcat);
+        $q->execute();
+        $res = $q->fetchColumn();
+        return $res;
+    }
+    
+    function countProductCart($id){
+        $count = 0;
+        if($id == 'guest'){ //faire un test avant l'appel de cette fonction est mieux
+            return 0;
+        }else{
+            $q = $this->database->prepare("SELECT SUM(`cart_quantity`) FROM carts WHERE `PK_FK_cart_customer_ID` = :id");
+            $q->execute([
+                'id' => $id
+            ]);
+            $count = $count + $q->fetchColumn();
+            return $count;
+        }
+    }
+    
+    
+    
+    function getPicture($productID){
+        $q = $this->database->prepare("SELECT picture_path from pictures WHERE FK_picture_product_ID =".$productID);
+        $q->execute();
+        $res = $q->fetchColumn();
+        return $res;
+    }
+    
+    function getDiscountOfProduct($id){
+        $q = $this->database->prepare("SELECT promotion_discountRate FROM promotions, promoted_products
+            WHERE PK_FK_promotion_product_ID = :id;");
+        $q->execute([
+            'id' => $id
+        ]);
+        return $q->fetchColumn();
+    }
+    
+
+    /***********************************************************/
+    
+    //Gestion de la connexion
+    
     function logIn($email, $password){
         $hashpass = password_hash($password, PASSWORD_BCRYPT);
         $q = $this->database->prepare("SELECT customer_passwordHash from customers
@@ -160,6 +213,7 @@ class Database {
         $testPassword = password_verify($password, $res);
         return $testPassword;
     }
+    
     
     function getCustomerID($email){
         $q = $this->database->prepare("SELECT PK_customer_ID from customers
@@ -185,6 +239,22 @@ class Database {
         }
     }      
     
+    function checkEmail($email){
+        $q = $this->database->prepare("SELECT COUNT(customer_email) FROM `customers`
+            WHERE `customer_email` = :email");
+        
+        $q->execute([
+            'email' => $email,
+        ]);
+        $res = $q->fetchColumn();
+        if($res>0){
+            return false; //retourne faux si cette adresse mail correspond déjà à un client
+        }else{
+            return true;
+        }
+
+    }
+    
     function signIn($lastName, $firstName, $email, $password, $birthDate) {
         
         $hashPass = password_hash($password, PASSWORD_BCRYPT);
@@ -200,29 +270,11 @@ class Database {
             'hashPass' => $hashPass,
             'birthDate' => $birthDate
         ]);
+        return 1;
     }
     
-    function CountProductCart($id){
-        if($id == 'guest'){ //faire un test avant l'appel de cette fonction est mieux
-            return 0;
-        }else{
-        $q = $this->database->prepare("SELECT SUM(`cart_quantity`) FROM carts WHERE `PK_FK_cart_customer_ID` = :id");
-        $q->execute([
-            'id' => $id
-        ]);
-        return $q->fetchColumn();
-        }
-    }
-    
-    function getDiscountOfProduct($id){
-        $q = $this->database->prepare("SELECT promotion_discountRate FROM promotions, promoted_products 
-            WHERE PK_FK_promotion_product_ID = :id;");
-        $q->execute([
-            'id' => $id
-        ]);
-        return $q->fetchColumn();
-    }
-    
+
+    //ajouter un article au panier
     function addToCart($idClient, $idProduit, $qte){
         $q = $this->database->prepare("SELECT SUM(cart_quantity) FROM `carts` 
             WHERE `PK_FK_cart_customer_ID` = :idClient AND `PK_FK_cart_product_ID` = :idProduit");
@@ -251,24 +303,29 @@ class Database {
                 'qte' => $newQte
             ]);
         }
+        
     }
     
-    function getPromotedProducts(){
-        $arrayResponse = array();
-        $q = $this->database->prepare("SELECT PK_product_ID, promotion_discountRate 
-        FROM `promoted_products`, `promotions`, `products` 
-        WHERE `PK_FK_promotion_ID`= `PK_promotion_ID` 
-        AND `PK_FK_promotion_product_ID` = `PK_product_ID` 
-        ORDER BY (promotion_discountRate) 
-        DESC LIMIT 9;");
-        $q->execute();
+    function getCart($idCustomer){
+        $arrayProducts = array();
+        $q = $this->database->prepare("SELECT PK_FK_cart_product_ID, cart_quantity FROM `carts`
+            WHERE `PK_FK_cart_customer_ID` = :idClient");
+        $q->execute([
+            'idClient' => $idCustomer
+        ]);
         $res = $q->fetchAll(PDO::FETCH_NUM);
         foreach ($res as $row){
-            array_push($arrayResponse, $row);
+            array_push($arrayProducts, array($row[0],$row[1]));
         }
-        return $arrayResponse;
+        return $arrayProducts;
     }
+    
+
 }
+
+    /***********************************************************/
+    
+    //fonctions
 
     function constructObjects($table, $row){
         switch ($table){

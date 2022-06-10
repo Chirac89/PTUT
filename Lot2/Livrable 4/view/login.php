@@ -2,19 +2,10 @@
 
 include '../model/Connexion.php';
 require '../model/Database.php';
-include 'test-login.php';
 
-if(isset($_SESSION['id']) && $_SESSION['id'] != "guest"){
-    $cartCount = $database->CountProductCart($_SESSION['id']);
-}else if(!isset($_SESSION['productlist'])){
-    $cartCount = 0;
-}else{
-    $cartCount = 0;
-    for($a = 0; $a < count($_SESSION['productlist']); $a++){
-        $cartCount = $cartCount + (int)$_SESSION['productlist'][$a][1];
-        //echo $_SESSION['productlist'][$a][1] . "</br>";
-    }
-}
+include '../controller/c_login.php';
+include '../controller/c_page_number.php';
+include '../controller/c_cart_count.php';
 
 include 'v_header.php';
 
@@ -28,6 +19,7 @@ include 'v_header.php';
 					<div class="col-lg-6 offset-lg-3 col-12">
 						<div class="login-form">
 							<h2>Login</h2>
+							<?php  if(isset($confirm)) echo "<h1>". $confirm . "</h1>" ?>
 							<p>Please register in order to checkout more quickly</p>
 							<!-- Form -->
 							<form class="form" method="post" action="#">

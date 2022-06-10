@@ -1,3 +1,7 @@
+<?php 
+include '../controller/c_cart_count.php';
+?>
+
 <!DOCTYPE html>
 <html lang="zxx">
 <head>

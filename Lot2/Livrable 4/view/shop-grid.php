@@ -2,53 +2,8 @@
 
 $allCats = $database->getAll("categories");
 
-if(isset($_GET['page'])){
-    $pageSelected = $_GET['page'];
-}else{
-    $pageSelected = 1;
-}
-
-//cat
-
-if(isset($_GET['cat'])){
-    if($_GET['cat'] == "all"){
-        $arrayCategories = $database->getAll("categories");
-    }else{
-        $cat = $database->getOneByID("categories", $_GET['cat']);
-        $arrayCategories = $database->FilterByCat("subcategories", $_GET['cat'], 0);
-    }
-    if(isset($_GET['search'])){
-        $arrayProducts = $database->ResultSearch($_GET['cat'], $_GET['search'], $pageSelected);
-    }else{
-        $arrayProducts = $database->FilterByCat("products", $_GET['cat'], $pageSelected);
-        $pageNumber = intdiv($database->CountProductsByCat($_GET['cat']),9);
-        $arrayCategories = $database->FilterByCat("subcategories", $_GET['cat'],0);
-    }
-}else{
-    if(isset($_GET['subcat'])){
-        $pageNumber = intdiv($database->CountProductsBySubCat($_GET['subcat']),9);
-        $subcat = $database->getOneByID("subcategories", $_GET['subcat']);
-        $arrayCategories = $database->FilterByCat("subcategories", $subcat->cat, 0);
-        $arrayProducts = $database->FilterBySubCat("products", $_GET['subcat'], $pageSelected);
-        $cat = $database->getOneByID("categories", $subcat->cat);
-    }else{
-        $pageNumber = intdiv($database->CountAllProducts(),9);
-        $arrayProducts = $database->getAllWithLimit("products", 9, ($pageSelected-1)*9);
-        $arrayCategories = $database->getAll("categories");
-    }
-}
-
-if(isset($_SESSION['id']) && $_SESSION['id'] != "guest"){
-    $cartCount = $database->CountProductCart($_SESSION['id']);
-}else if(!isset($_SESSION['productlist'])){
-    $cartCount = 0;
-}else{
-    $cartCount = 0;
-    for($a = 0; $a < count($_SESSION['productlist']); $a++){
-        $cartCount = $cartCount + (int)$_SESSION['productlist'][$a][1];
-        //echo $_SESSION['productlist'][$a][1] . "</br>";
-    }
-}
+include '../controller/c_page_number.php';
+include '../controller/c_instantiate_products.php';
 
 include 'v_header.php';
 include 'v_breadcrumbs.php'
@@ -207,8 +162,8 @@ include 'v_breadcrumbs.php'
 						<div class="single-product">
 							<div class="product-img">
 								<a href="<?php echo "detail.php?product=".$product->getId()?>">
-									<img class="default-img" src="<?php echo $database->GetPicture($product->getId());?>" alt="#">
-									<img class="hover-img" src="<?php echo $database->GetPicture($product->getId());?>" alt="#">
+									<img class="default-img" src="<?php echo $database->getPicture($product->getId());?>" alt="#">
+									<img class="hover-img" src="<?php echo $database->getPicture($product->getId());?>" alt="#">
 								</a>
 								<div class="button-head">
 									<div class="product-action">
